@@ -1,0 +1,50 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
+    }
+}
+
+plugins {
+	id 'io.franzbecker.gradle-lombok' version '1.8'
+	id 'java'
+}
+
+lombok {
+	sha256 = "" // skip verifyLombok task
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+jar {
+    baseName = 'textConnect'
+    version =  '0.1.0'
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+dependencies {
+    // tag::tomcat
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.springframework.boot:spring-boot-devtools")
+    // tag::actuator[]
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    // end::actuator[]
+    testCompile("junit:junit")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
+    testCompile "org.mockito:mockito-core:2.+" 
+    testCompile "com.jayway.jsonpath:json-path"
+    testCompile 'com.google.code.gson:gson'
+}
