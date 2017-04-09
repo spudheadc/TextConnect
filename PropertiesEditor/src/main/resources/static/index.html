@@ -7,6 +7,12 @@
 	crossorigin="anonymous">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+<style type="text/css">
+body {
+	padding-top: 60px;
+	padding-bottom: 60px;
+}
+</style>
 
 <script src="apps/tree/abn_tree_directive.js">
 	
@@ -19,11 +25,10 @@
 <body>
 
 	<div ng-controller="PropertyEditorController">
-		<nav class="navbar navbar-default">
+		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="container-fluid">
 				<a class="navbar-brand" style="padding: 0px" href="#"> <img
-					alt="Brand" style="height: 50px"
-					src="https://nabconnect2.nab.com.au/DRH/ff_large/images/nab_logo.jpg?v=20170328181754">
+					alt="Brand" style="height: 50px" src="apps/nab_logo.jpg">
 				</a>
 				<form class="navbar-form navbar-left" role="search">
 					<div class="form-group">
@@ -44,16 +49,16 @@
 				<form class="navbar-form navbar-left" role="edit">
 					<label>{{branch.label}}</label>
 					<div ng-repeat="item in branch.values" class="form-group">
-						<input ng-model="item.value">
-						<label>Found in {{item.filename}}</label>
+						<input ng-model="item.value" style="width: 60em"> <label>Found
+							in {{item.filename}}</label>
 					</div>
 				</form>
 			</div>
 		</nav>
-		<div class="container">
-		
-					<abn-tree tree-data="data" tree-control="treeControl"
-						on-select="tree_event_handler(branch)"></abn-tree>
+		<div>
+
+			<abn-tree tree-data="data" tree-control="treeControl"
+				on-select="tree_event_handler(branch)"></abn-tree>
 		</div>
 </body>
 </html>

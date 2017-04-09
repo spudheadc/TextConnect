@@ -9,7 +9,7 @@
 
 	app = angular.module('propertyEditor', deps);
 
-	app.controller('PropertyEditorController', function($scope, $http) {
+	app.controller('PropertyEditorController', function($scope, $http, $location, $anchorScroll) {
 		var checkBranch;
 		$scope.tree_event_handler = function(branch) {
 			var _ref;
@@ -19,9 +19,6 @@
 		};
 
 		$scope.treeControl = {};
-		
-		
-		
 		
 		$scope.search={_text:"",
 				_match:0,
@@ -42,7 +39,7 @@
 							var valueText = item.value;
 							if(text != null && valueText != null 
 								    && typeof text === 'string' && typeof valueText === 'string'
-								        && text.toUpperCase() === valueText.toUpperCase())
+								        && -1<valueText.toUpperCase().search(text.toUpperCase()))
 							{
 								return true;
 							}
@@ -81,9 +78,13 @@
 					}
 					if(branch)
 					{
+						$anchorScroll.yOffset = 55;
 						this._match++;
 						$scope.treeControl.collapse_all();
 						$scope.treeControl.select_branch(branch);
+						$location.hash(branch.uid);
+					    console.log($location.hash());
+					    $anchorScroll();
 					}
 					
 				}
