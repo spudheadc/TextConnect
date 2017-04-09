@@ -18,9 +18,16 @@
 	<div class="container">
 
 		<div ng-controller="PropertyEditorController">
+		
 			<div class="row">
 				<div class="col-md-8">
-					<abn-tree class="container" tree-data="data"
+					<input ng-model="search.text">
+					<button ng-click="search.findNext()">Find</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8" style="height:400px;overflow:auto">
+					<abn-tree tree-data="data"  tree-control="treeControl"
 						on-select="tree_event_handler(branch)"></abn-tree>
 				</div>
 				<div class="col-md-4">

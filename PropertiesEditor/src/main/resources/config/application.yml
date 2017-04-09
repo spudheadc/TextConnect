@@ -1,0 +1,8 @@
+textConnect:
+    files:
+        - C:\DEV\git_repos\NABC\cbib\dev\src\wars\templateWAR\src\resources\common.properties
+        - C:\DEV\git_repos\NABC\cbib\dev\src\wars\templateWAR\src\resources\error.properties
+        - C:\DEV\git_repos\NABC\cbib\dev\src\wars\templateWAR\src\resources\messages-custreporting.properties
+        - C:\DEV\git_repos\NABC\cbib\dev\src\wars\templateWAR\src\resources\messages-payment-auth.properties
+        - C:\DEV\git_repos\NABC\cbib\dev\src\wars\templateWAR\src\resources\messages-payment.properties
+        - C:\DEV\git_repos\NABC\cbib\dev\src\wars\templateWAR\src\resources\messages-paymenthistory.properties
