@@ -8,42 +8,52 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
 
-<script src="apps/tree/abn_tree_directive.js">		</script>
+<script src="apps/tree/abn_tree_directive.js">
+	
+</script>
 
 
 <link rel="stylesheet" href="apps/tree/abn_tree.css">
 <script src="apps/editor/app.js"></script>
 </head>
 <body>
-	<div class="container">
 
-		<div ng-controller="PropertyEditorController">
-		
-			<div class="row">
-				<div class="col-md-8">
-					<input ng-model="search.text">
-					<button ng-click="search.findNext()">Find</button>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-8" style="height:400px;overflow:auto">
-					<abn-tree tree-data="data"  tree-control="treeControl"
-						on-select="tree_event_handler(branch)"></abn-tree>
-				</div>
-				<div class="col-md-4">
-					<label>{{branch.label}}</label>
-
-					<div ng-repeat="item in branch.values">
-						<input ng-model="item.value">
-						<p>Found in {{item.filename}}</p>
+	<div ng-controller="PropertyEditorController">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<a class="navbar-brand" style="padding: 0px" href="#"> <img
+					alt="Brand" style="height: 50px"
+					src="https://nabconnect2.nab.com.au/DRH/ff_large/images/nab_logo.jpg?v=20170328181754">
+				</a>
+				<form class="navbar-form navbar-left" role="search">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Search"
+							ng-model="search.text">
 					</div>
-				</div>
+
+					<button class="btn btn-default" ng-click="search.findNext()">Find</button>
+				</form>
+				<ul class="nav navbar-nav">
+					<li><a ng-click="save()">Save</a></li>
+				</ul>
+				<!-- /.container-fluid -->
 			</div>
-			<div class="row">
-				<div class="col-md-8">
-					<button ng-click="save()">Save</button>
-				</div>
+		</nav>
+		<nav class="navbar navbar-default navbar-fixed-bottom">
+			<div class="container">
+				<form class="navbar-form navbar-left" role="edit">
+					<label>{{branch.label}}</label>
+					<div ng-repeat="item in branch.values" class="form-group">
+						<input ng-model="item.value">
+						<label>Found in {{item.filename}}</label>
+					</div>
+				</form>
 			</div>
+		</nav>
+		<div class="container">
+		
+					<abn-tree tree-data="data" tree-control="treeControl"
+						on-select="tree_event_handler(branch)"></abn-tree>
 		</div>
 </body>
 </html>
