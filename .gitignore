@@ -1,0 +1,9 @@
+PropertiesEditor/bin
+PropertiesEditor/build
+PropertiesEditor/.project
+PropertiesEditor/.settings
+PropertiesEditor/.springBeans
+PropertiesEditor/.classpath
+PropertiesEditor/.gradle/
+PropertiesEditor/gradle/wrapper/gradle-wrapper.jar
+PropertiesEditor/gradle/wrapper/gradle-wrapper.properties
