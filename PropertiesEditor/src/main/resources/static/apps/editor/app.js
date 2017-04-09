@@ -83,7 +83,6 @@
 						$scope.treeControl.collapse_all();
 						$scope.treeControl.select_branch(branch);
 						$location.hash(branch.uid);
-					    console.log($location.hash());
 					    $anchorScroll();
 					}
 					
