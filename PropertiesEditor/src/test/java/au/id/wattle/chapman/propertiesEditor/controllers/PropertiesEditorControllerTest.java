@@ -58,6 +58,7 @@ public class PropertiesEditorControllerTest {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testPutValues() throws Exception {
 
@@ -74,7 +75,7 @@ public class PropertiesEditorControllerTest {
 
 	}
 
-	private Map getMap(String value) {
+	private Map<String, String> getMap(String value) {
 
 		Map<String, String> map = new TreeMap<String, String>();
 		map.put("blah", value);

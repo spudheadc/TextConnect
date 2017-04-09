@@ -1,6 +1,5 @@
 package au.id.wattle.chapman.propertiesEditor.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,11 +10,12 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import lombok.Setter;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.WritableResource;
 
 import au.id.wattle.chapman.propertiesEditor.model.TreeNode;
-import lombok.Setter;
 
 public class PropertiesEditorServiceImpl implements PropertyEditorService {
 
@@ -61,7 +61,6 @@ public class PropertiesEditorServiceImpl implements PropertyEditorService {
 				tree = child;
 			else {
 				child = new TreeNode();
-				child.setParent(tree);
 				child.setLabel(words[i]);
 
 				if (tree.getChildren() == null)
@@ -133,7 +132,6 @@ public class PropertiesEditorServiceImpl implements PropertyEditorService {
 			}
 
 			try {
-				File resourceFile = resource.getFile() ;
 				assert (WritableResource.class.isInstance(resource));
 				prop.store(((WritableResource)resource).getOutputStream(), null);
 			} catch (IOException e) {
