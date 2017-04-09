@@ -21,7 +21,7 @@ public class PropertiesEditorController {
 	@Autowired
 	private PropertyEditorService service;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/editableProperties")
+	@RequestMapping(method = RequestMethod.GET, value = "/messages/resources")
 
 	@ApiOperation(value = "Reads the configured properties files and returns a tree structure. This "
 			+ "operation will parse the properties file to return a structure based on a dot notation"
@@ -30,7 +30,7 @@ public class PropertiesEditorController {
 		return service.getTree();
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, value = "/editableProperties")
+	@RequestMapping(method = RequestMethod.PUT, value = "/messages/resources")
 
 	@ApiOperation(value = "Writes the configured properties files with the supplied tree structure. This "
 			+ "operation will parse the properties file to return a structure based on a dot notation"

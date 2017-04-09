@@ -12,9 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,20 +24,21 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.google.gson.Gson;
-
 import au.id.wattle.chapman.propertiesEditor.model.TreeNode;
+import au.id.wattle.chapman.propertiesEditor.model.ValueNode;
 import au.id.wattle.chapman.propertiesEditor.service.PropertyEditorService;
+
+import com.google.gson.Gson;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(PropertiesEditorController.class)
 public class PropertiesEditorControllerTest {
 
-
-    @Autowired
+	@Autowired
 	private MockMvc mockMvc;
 
-	public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
+	public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(
+			MediaType.APPLICATION_JSON.getType(),
 			MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
 	@MockBean
@@ -50,11 +50,16 @@ public class PropertiesEditorControllerTest {
 		List<TreeNode> list = new ArrayList<TreeNode>();
 		list.add(getTestTree());
 		when(service.getTree()).thenReturn(list);
-		mockMvc.perform(get("/editableProperties")).andExpect(status().isOk())
-				.andExpect(content().contentType(APPLICATION_JSON_UTF8.toString()))
-				.andExpect(jsonPath("$", isA(List.class))).andExpect(jsonPath("$[0].label", equalToIgnoringCase("a")))
+		mockMvc.perform(get("/messages/resources"))
+				.andExpect(status().isOk())
+				.andExpect(
+						content().contentType(APPLICATION_JSON_UTF8.toString()))
+				.andExpect(jsonPath("$", isA(List.class)))
+				.andExpect(jsonPath("$[0].label", equalToIgnoringCase("a")))
 				.andExpect(jsonPath("$[0].children", isA(List.class)))
-				.andExpect(jsonPath("$[0].children[0].value.blah", equalToIgnoringCase("b value")));
+				.andExpect(
+						jsonPath("$[0].children[0].values[0].value",
+								equalToIgnoringCase("b value")));
 
 	}
 
@@ -67,32 +72,37 @@ public class PropertiesEditorControllerTest {
 
 		when(service.setTree(any(List.class))).thenReturn(list);
 		String json = (new Gson()).toJson(list);
-		mockMvc.perform(put("/editableProperties").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isOk()).andExpect(content().contentType(APPLICATION_JSON_UTF8.toString()))
-				.andExpect(jsonPath("$", isA(List.class))).andExpect(jsonPath("$[0].label", equalToIgnoringCase("a")))
+		mockMvc.perform(
+				put("/messages/resources").contentType(
+						MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isOk())
+				.andExpect(
+						content().contentType(APPLICATION_JSON_UTF8.toString()))
+				.andExpect(jsonPath("$", isA(List.class)))
+				.andExpect(jsonPath("$[0].label", equalToIgnoringCase("a")))
 				.andExpect(jsonPath("$[0].children", isA(List.class)))
-				.andExpect(jsonPath("$[0].children[0].value.blah", equalToIgnoringCase("b value")));
+				.andExpect(
+						jsonPath("$[0].children[0].values[0].value",
+								equalToIgnoringCase("b value")));
 
 	}
 
-	private Map<String, String> getMap(String value) {
+	private List<ValueNode> getValueNodes(String value) {
 
-		Map<String, String> map = new TreeMap<String, String>();
-		map.put("blah", value);
-		return map;
+		return Arrays.asList(new ValueNode("blah", value));
 	}
 
 	private TreeNode getTestTree() {
 		TreeNode aNode = new TreeNode();
 		aNode.setLabel("a");
 		TreeNode bNode = new TreeNode();
-		bNode.setValue(getMap("b value"));
+		bNode.setValues(getValueNodes("b value"));
 		bNode.setLabel("b");
 		aNode.setChildren(new ArrayList<TreeNode>());
 		aNode.getChildren().add(bNode);
 
 		TreeNode cNode = new TreeNode();
-		cNode.setValue(getMap("c value"));
+		cNode.setValues(getValueNodes("c value"));
 		cNode.setLabel("c");
 		aNode.getChildren().add(cNode);
 		return aNode;

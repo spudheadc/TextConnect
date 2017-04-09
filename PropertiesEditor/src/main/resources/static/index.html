@@ -33,9 +33,9 @@
 				<div class="col-md-4">
 					<label>{{branch.label}}</label>
 
-					<div ng-repeat="item in items">
-						<input ng-model="branch.value[item.key]">
-						<p>Found in {{item.key}}</p>
+					<div ng-repeat="item in branch.values">
+						<input ng-model="item.value">
+						<p>Found in {{item.filename}}</p>
 					</div>
 				</div>
 			</div>

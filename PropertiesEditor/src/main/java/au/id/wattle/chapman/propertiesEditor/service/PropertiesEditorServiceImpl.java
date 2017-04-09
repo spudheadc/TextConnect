@@ -4,10 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import lombok.Setter;
@@ -16,6 +14,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.WritableResource;
 
 import au.id.wattle.chapman.propertiesEditor.model.TreeNode;
+import au.id.wattle.chapman.propertiesEditor.model.ValueNode;
 
 public class PropertiesEditorServiceImpl implements PropertyEditorService {
 
@@ -31,7 +30,8 @@ public class PropertiesEditorServiceImpl implements PropertyEditorService {
 	@Override
 	public List<TreeNode> getTree() {
 		ArrayList<TreeNode> nodes = new ArrayList<TreeNode>();
-		for (Iterator<Resource> fileIterator = files.iterator(); fileIterator.hasNext();) {
+		for (Iterator<Resource> fileIterator = files.iterator(); fileIterator
+				.hasNext();) {
 			Resource resource = fileIterator.next();
 			Properties prop = new Properties();
 			try {
@@ -41,9 +41,11 @@ public class PropertiesEditorServiceImpl implements PropertyEditorService {
 			}
 
 			Set<String> keys = new TreeSet<String>(prop.stringPropertyNames());
-			for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
+			for (Iterator<String> iterator = keys.iterator(); iterator
+					.hasNext();) {
 				String key = iterator.next();
-				addNode(nodes, key, prop.getProperty(key), resource.getFilename());
+				addNode(nodes, key, prop.getProperty(key),
+						resource.getFilename());
 			}
 
 		}
@@ -51,7 +53,8 @@ public class PropertiesEditorServiceImpl implements PropertyEditorService {
 		return nodes;
 	}
 
-	private TreeNode addNode(List<TreeNode> nodes, String key, String value, String filename) {
+	private TreeNode addNode(List<TreeNode> nodes, String key, String value,
+			String filename) {
 		String[] words = key.split("\\.");
 		TreeNode tree = getRootNode(nodes, words[0]);
 
@@ -70,9 +73,9 @@ public class PropertiesEditorServiceImpl implements PropertyEditorService {
 				tree = child;
 			}
 		}
-		Map<String, String> map = new TreeMap<String, String>();
-		map.put(filename, value);
-		tree.setValue(map);
+		if (tree.getValues() == null)
+			tree.setValues(new ArrayList<ValueNode>());
+		tree.getValues().add(new ValueNode(filename, value));
 		return tree;
 
 	}
@@ -119,13 +122,14 @@ public class PropertiesEditorServiceImpl implements PropertyEditorService {
 	 */
 	@Override
 	public List<TreeNode> setTree(List<TreeNode> tree) {
-		
 
-		for (Iterator<Resource> fileIterator = files.iterator(); fileIterator.hasNext();) {
+		for (Iterator<Resource> fileIterator = files.iterator(); fileIterator
+				.hasNext();) {
 			Resource resource = fileIterator.next();
 
 			Properties prop = new Properties();
-			for (Iterator<TreeNode> iterator = tree.iterator(); iterator.hasNext();) {
+			for (Iterator<TreeNode> iterator = tree.iterator(); iterator
+					.hasNext();) {
 				TreeNode treeNode = iterator.next();
 				populateProperties(prop, treeNode, null, resource.getFilename());
 
@@ -133,7 +137,8 @@ public class PropertiesEditorServiceImpl implements PropertyEditorService {
 
 			try {
 				assert (WritableResource.class.isInstance(resource));
-				prop.store(((WritableResource)resource).getOutputStream(), null);
+				prop.store(((WritableResource) resource).getOutputStream(),
+						null);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -144,18 +149,32 @@ public class PropertiesEditorServiceImpl implements PropertyEditorService {
 
 	}
 
-	private void populateProperties(Properties prop, TreeNode node, String parentName, String filename) {
+	private String getValueForFilename(TreeNode node, String filename) {
+		if (node.getValues() != null) {
+			for (Iterator<ValueNode> iterator = node.getValues().iterator(); iterator
+					.hasNext();) {
+				ValueNode valueNode = iterator.next();
+				if (valueNode != null && valueNode.getFilename() != null
+						&& valueNode.getFilename().equals(filename)) {
+					return valueNode.getValue();
+				}
+			}
+		}
+		return null;
+	}
+
+	private void populateProperties(Properties prop, TreeNode node,
+			String parentName, String filename) {
 		String name = node.getLabel();
 		if (parentName != null)
 			name = parentName + "." + node.getLabel();
-		String value = null;
-		if (node.getValue() != null)
-			value = (String) node.getValue().get(filename);
+		String value = getValueForFilename(node, filename);
 		if (value != null) {
 			prop.setProperty(name, value);
 		} else {
 			if (node.getChildren() != null) {
-				for (Iterator<TreeNode> iterator = node.getChildren().iterator(); iterator.hasNext();) {
+				for (Iterator<TreeNode> iterator = node.getChildren()
+						.iterator(); iterator.hasNext();) {
 					TreeNode child = iterator.next();
 					populateProperties(prop, child, name, filename);
 				}
