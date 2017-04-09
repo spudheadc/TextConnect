@@ -1,21 +1,17 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven {
+      		url "https://plugins.gradle.org/m2/"
+    	}
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
+        classpath("io.franzbecker:gradle-lombok:1.8")
     }
 }
 
-plugins {
-	id 'io.franzbecker.gradle-lombok' version '1.8'
-	id 'java'
-}
-
-lombok {
-	sha256 = "" // skip verifyLombok task
-}
-
+apply plugin: 'io.franzbecker.gradle-lombok'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -31,8 +27,8 @@ repositories {
     mavenCentral()
 }
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 dependencies {
     // tag::tomcat

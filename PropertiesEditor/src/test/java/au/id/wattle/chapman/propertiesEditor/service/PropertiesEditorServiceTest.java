@@ -94,6 +94,48 @@ public class PropertiesEditorServiceTest {
 		assertEquals("b", node.getLabel());
 		assertEquals("a", node.getChildren().get(0).getLabel());
 	}
+	
+
+
+	@Test
+	public void testGetTreeRepeated() throws Exception {
+		String str = "a.a=value a\nb.a=value ba\nb.b=value bb";
+		when(fileResource.getFilename()).thenReturn("filename");
+		when(fileResource.getInputStream()).thenReturn(
+				new ByteArrayInputStream(str.getBytes()));
+		List<Resource> list = new ArrayList<Resource>();
+		list.add(fileResource);
+		service.setFiles(list);
+		
+		List<TreeNode> nodes = service.getTree();
+
+		assertNotNull(nodes);
+		TreeNode node = nodes.get(0);
+
+		assertNotNull(node);
+		assertEquals("a", node.getLabel());
+
+		TreeNode bNode = node.getChildren().get(0);
+		assertNotNull(bNode);
+		assertEquals("a", bNode.getLabel());
+		assertEquals("value a", bNode.getValue().get("filename"));
+		
+
+		node = nodes.get(1);
+
+		assertNotNull(node);
+		assertEquals("b", node.getLabel());
+
+		bNode = node.getChildren().get(0);
+		assertNotNull(bNode);
+		assertEquals("a", bNode.getLabel());
+		assertEquals("value ba", bNode.getValue().get("filename"));
+
+		bNode = node.getChildren().get(1);
+		assertNotNull(bNode);
+		assertEquals("b", bNode.getLabel());
+		assertEquals("value bb", bNode.getValue().get("filename"));
+	}
 
 	@Test
 	public void testSetTree() throws Exception {
@@ -124,7 +166,7 @@ public class PropertiesEditorServiceTest {
 		return properties;
 	}
 
-	private Map getMap(String value) {
+	private Map<String, String>  getMap(String value) {
 
 		Map<String, String> map = new TreeMap<String, String>();
 		map.put("filename", value);
