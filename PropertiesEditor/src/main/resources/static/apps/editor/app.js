@@ -15,13 +15,6 @@
 			var _ref;
 			
 			$scope.branch = branch;
-			$scope.items = [];
-			angular.forEach(branch.value, function(value, key) {
-				this.push({
-					key : key,
-					value : value
-				});
-			}, $scope.items);
 
 		};
 
@@ -41,10 +34,12 @@
 				},
 				_checkBranch:function(text,branch)
 				{
-					if (branch.value)
+					if (branch.values)
 					{
-						for(var key in branch.value){
-							var valueText = branch.value[key];
+						for (var i = 0, len = branch.values.length; i < len; i++) {
+							var item = branch.values[i];
+
+							var valueText = item.value;
 							if(text != null && valueText != null 
 								    && typeof text === 'string' && typeof valueText === 'string'
 								        && text.toUpperCase() === valueText.toUpperCase())
@@ -94,11 +89,11 @@
 				}
 		};
 		$scope.data = [];
-		$http.get('editableProperties').then(function(response) {
+		$http.get('messages/resources').then(function(response) {
 			$scope.data = response.data;
 		});
 		$scope.save=function(){
-			$http.put('editableProperties',$scope.data).then(function(response) {
+			$http.put('messages/resources',$scope.data).then(function(response) {
 				$scope.data = response.data;
 			});
 	    }

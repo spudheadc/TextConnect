@@ -12,10 +12,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.TreeMap;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +26,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.WritableResource;
 
 import au.id.wattle.chapman.propertiesEditor.model.TreeNode;
+import au.id.wattle.chapman.propertiesEditor.model.ValueNode;
 
 /**
  * @author chris
@@ -45,6 +46,20 @@ public class PropertiesEditorServiceTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
+	}
+
+	private String getValueForFilename(TreeNode node, String filename) {
+		if (node.getValues() != null) {
+			for (Iterator<ValueNode> iterator = node.getValues().iterator(); iterator
+					.hasNext();) {
+				ValueNode valueNode = iterator.next();
+				if (valueNode != null && valueNode.getFilename() != null
+						&& valueNode.getFilename().equals(filename)) {
+					return valueNode.getValue();
+				}
+			}
+		}
+		return null;
 	}
 
 	@Test
@@ -68,12 +83,12 @@ public class PropertiesEditorServiceTest {
 		TreeNode bNode = node.getChildren().get(0);
 		assertNotNull(bNode);
 		assertEquals("b", bNode.getLabel());
-		assertEquals("value 1", bNode.getValue().get("filename"));
+		assertEquals("value 1", getValueForFilename(bNode,"filename"));
 		
 		TreeNode cNode = node.getChildren().get(1);
 		assertNotNull(cNode);
 		assertEquals("c", cNode.getLabel());
-		assertEquals("value 2", cNode.getValue().get("filename"));
+		assertEquals("value 2", getValueForFilename(cNode,"filename"));
 
 		TreeNode dNode = node.getChildren().get(2);
 		assertEquals("d", dNode.getLabel());
@@ -83,12 +98,12 @@ public class PropertiesEditorServiceTest {
 		TreeNode eNode = dNode.getChildren().get(0);
 		assertNotNull(eNode);
 		assertEquals("e", eNode.getLabel());
-		assertEquals("value 3", eNode.getValue().get("filename"));
+		assertEquals("value 3", getValueForFilename(eNode,"filename"));
 		
 		TreeNode fNode = dNode.getChildren().get(1);
 		assertNotNull(fNode);
 		assertEquals("f", fNode.getLabel());
-		assertEquals("value 4", fNode.getValue().get("filename"));
+		assertEquals("value 4", getValueForFilename(fNode,"filename"));
 
 		node = nodes.get(1);
 		assertEquals("b", node.getLabel());
@@ -118,7 +133,7 @@ public class PropertiesEditorServiceTest {
 		TreeNode bNode = node.getChildren().get(0);
 		assertNotNull(bNode);
 		assertEquals("a", bNode.getLabel());
-		assertEquals("value a", bNode.getValue().get("filename"));
+		assertEquals("value a", getValueForFilename(bNode,"filename"));
 		
 
 		node = nodes.get(1);
@@ -129,12 +144,12 @@ public class PropertiesEditorServiceTest {
 		bNode = node.getChildren().get(0);
 		assertNotNull(bNode);
 		assertEquals("a", bNode.getLabel());
-		assertEquals("value ba", bNode.getValue().get("filename"));
+		assertEquals("value ba", getValueForFilename(bNode,"filename"));
 
 		bNode = node.getChildren().get(1);
 		assertNotNull(bNode);
 		assertEquals("b", bNode.getLabel());
-		assertEquals("value bb", bNode.getValue().get("filename"));
+		assertEquals("value bb", getValueForFilename(bNode,"filename"));
 	}
 
 	@Test
@@ -166,24 +181,21 @@ public class PropertiesEditorServiceTest {
 		return properties;
 	}
 
-	private Map<String, String>  getMap(String value) {
-
-		Map<String, String> map = new TreeMap<String, String>();
-		map.put("filename", value);
-		return map;
+	private List<ValueNode>  getMap(String value) {
+		return Arrays.asList(new ValueNode("filename", value));
 	}
 
 	private TreeNode getTestTree() {
 		TreeNode aNode = new TreeNode();
 		aNode.setLabel("a");
 		TreeNode bNode = new TreeNode();
-		bNode.setValue(getMap("b value"));
+		bNode.setValues(getMap("b value"));
 		bNode.setLabel("b");
 		aNode.setChildren(new ArrayList<TreeNode>());
 		aNode.getChildren().add( bNode);
 		
 		TreeNode cNode = new TreeNode();
-		cNode.setValue(getMap("c value"));
+		cNode.setValues(getMap("c value"));
 		cNode.setLabel("c");
 		aNode.getChildren().add(cNode);
 		return aNode;
